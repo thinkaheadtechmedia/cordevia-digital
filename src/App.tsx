@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ViewTab, CartItem, MarketplaceItem, ToastMessage } from './types';
+import { ViewTab, CartItem, MarketplaceItem, ToastMessage, BlogPost } from './types';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { CartDrawer } from './components/CartDrawer';
@@ -20,6 +20,7 @@ import { CookieConsentBanner } from './components/CookieConsentBanner';
 
 export default function App() {
   const [currentTab, setCurrentTab] = useState<ViewTab>('home');
+  const [activePost, setActivePost] = useState<BlogPost | null>(null);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -94,14 +95,17 @@ export default function App() {
   const cartCount = cart.reduce((total, i) => total + i.quantity, 0);
 
   const handleNavigate = (tab: ViewTab) => {
+    if (tab !== 'blog') {
+      setActivePost(null);
+    }
     setCurrentTab(tab);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
     <div className="min-h-screen bg-[#090D16] text-slate-100 flex flex-col selection:bg-cyan-500/25 selection:text-cyan-300">
-      {/* Dynamic SEO Head Manager */}
-      <SEOHead currentTab={currentTab} />
+      {/* Dynamic SEO Head Manager with unique dynamic OG images */}
+      <SEOHead currentTab={currentTab} activePost={activePost} />
       
       {/* Global Navigation Header */}
       <Navbar
@@ -132,7 +136,8 @@ export default function App() {
         {currentTab === 'blog' && (
           <BlogView 
             onNavigate={handleNavigate} 
-            onShowToast={showToast} 
+            onShowToast={showToast}
+            onActivePostChange={setActivePost}
           />
         )}
 

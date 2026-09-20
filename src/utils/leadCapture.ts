@@ -17,6 +17,8 @@ export interface CapturedLead {
     articleTitle?: string;
     gateway?: string;
     amount?: string;
+    interests?: string[];
+    subscriberName?: string;
   };
 }
 

@@ -1,5 +1,6 @@
 import { ViewTab, BlogPost } from '../types';
 import { BRAND_INFO } from '../data/brandData';
+import { generateDynamicOGImageUrl } from './ogImage';
 
 export interface SEOConfig {
   title: string;
@@ -8,6 +9,7 @@ export interface SEOConfig {
   canonicalUrl?: string;
   ogType?: 'website' | 'article';
   image?: string;
+  ogImage?: string;
   publishedTime?: string;
   modifiedTime?: string;
   author?: string;
@@ -111,12 +113,30 @@ export const updateHeadMetadata = (config: SEOConfig): void => {
   setMetaTag('meta[property="og:site_name"]', 'property', 'og:site_name', 'Cordevia Digital');
   setMetaTag('meta[property="og:locale"]', 'property', 'og:locale', 'en_US');
 
+  // Dynamic Open Graph Image Generation
+  const effectiveOgImage = config.ogImage || config.image || generateDynamicOGImageUrl({
+    title: config.title.replace(/\s*\|\s*Cordevia Digital.*$/, '').replace(/\s*–\s*.*$/, ''),
+    category: config.category || (config.ogType === 'article' ? 'Technical Research' : 'Media-Tech Engineering'),
+    author: config.author || 'Cordevia Digital',
+    readTime: 'Research Analysis',
+    date: '2026 Edition',
+  });
+
+  setMetaTag('meta[property="og:image"]', 'property', 'og:image', effectiveOgImage);
+  setMetaTag('meta[property="og:image:secure_url"]', 'property', 'og:image:secure_url', effectiveOgImage);
+  setMetaTag('meta[property="og:image:type"]', 'property', 'og:image:type', 'image/svg+xml');
+  setMetaTag('meta[property="og:image:width"]', 'property', 'og:image:width', '1200');
+  setMetaTag('meta[property="og:image:height"]', 'property', 'og:image:height', '630');
+  setMetaTag('meta[property="og:image:alt"]', 'property', 'og:image:alt', `${config.title} - Cordevia Digital`);
+
   // Twitter Cards
   setMetaTag('meta[name="twitter:card"]', 'name', 'twitter:card', 'summary_large_image');
   setMetaTag('meta[name="twitter:site"]', 'name', 'twitter:site', '@cordeviadigital');
   setMetaTag('meta[name="twitter:creator"]', 'name', 'twitter:creator', '@cordeviadigital');
   setMetaTag('meta[name="twitter:title"]', 'name', 'twitter:title', config.title);
   setMetaTag('meta[name="twitter:description"]', 'name', 'twitter:description', config.description);
+  setMetaTag('meta[name="twitter:image"]', 'name', 'twitter:image', effectiveOgImage);
+  setMetaTag('meta[name="twitter:image:alt"]', 'name', 'twitter:image:alt', `${config.title} - Cordevia Digital`);
 
   // Canonical Link
   let canonicalEl = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
@@ -268,6 +288,7 @@ export const updateHeadMetadata = (config: SEOConfig): void => {
       },
       headline: config.title,
       description: config.description,
+      image: effectiveOgImage,
       inLanguage: 'en-US',
       mainEntityOfPage: config.canonicalUrl || currentUrl,
       datePublished: config.publishedTime || '2026-03-01T08:00:00Z',
@@ -291,11 +312,21 @@ export const updateHeadMetadata = (config: SEOConfig): void => {
 };
 
 export const updateSEOPost = (post: BlogPost): void => {
+  const dynamicOgImage = generateDynamicOGImageUrl({
+    title: post.title,
+    category: post.category,
+    author: post.author.name,
+    readTime: post.readTime,
+    date: post.date,
+  });
+
   updateHeadMetadata({
     title: `${post.title} | Cordevia Digital`,
     description: post.excerpt,
     keywords: `${post.tags.join(', ')}, ${post.category}, SEO strategy, rank page 1 google, Cordevia Digital`,
     ogType: 'article',
+    ogImage: dynamicOgImage,
+    image: dynamicOgImage,
     includeArticleSchema: true,
     author: post.author.name,
     category: post.category,
