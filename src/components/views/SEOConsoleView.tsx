@@ -42,7 +42,7 @@ export const SEOConsoleView: React.FC<SEOConsoleViewProps> = ({ onNavigate, onSh
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [copiedSection, setCopiedSection] = useState<string | null>(null);
-  const [customVerificationCode, setCustomVerificationCode] = useState('google-site-verification-cordevia-2026-auth');
+  const [customVerificationCode, setCustomVerificationCode] = useState('kRsj2qCsEljrS1rzs8qlRnP4C7E9vWvt0JgEsK-DJBQ');
   const [customPublisherId, setCustomPublisherId] = useState('pub-9204859182740192');
 
   const sitemapEntries = useMemo(() => getSitemapEntries(BASE_CANONICAL_URL), []);
