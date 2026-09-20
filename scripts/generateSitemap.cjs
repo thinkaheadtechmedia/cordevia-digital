@@ -153,13 +153,25 @@ contact=hello@cordeviadigital.com
 subdomain=cordeviadigital.com
 `;
 
-const publicDir = path.join(__dirname, '../public');
-if (!fs.existsSync(publicDir)) {
-  fs.mkdirSync(publicDir, { recursive: true });
+try {
+  const publicDir = path.join(__dirname, '../public');
+  if (!fs.existsSync(publicDir)) {
+    fs.mkdirSync(publicDir, { recursive: true });
+  }
+
+  fs.writeFileSync(path.join(publicDir, 'sitemap.xml'), sitemapXml, 'utf8');
+  fs.writeFileSync(path.join(publicDir, 'robots.txt'), robotsTxt, 'utf8');
+  fs.writeFileSync(path.join(publicDir, 'ads.txt'), adsTxt, 'utf8');
+
+  // Also sync to dist if dist directory already exists
+  const distDir = path.join(__dirname, '../dist');
+  if (fs.existsSync(distDir)) {
+    fs.writeFileSync(path.join(distDir, 'sitemap.xml'), sitemapXml, 'utf8');
+    fs.writeFileSync(path.join(distDir, 'robots.txt'), robotsTxt, 'utf8');
+    fs.writeFileSync(path.join(distDir, 'ads.txt'), adsTxt, 'utf8');
+  }
+
+  console.log(`✅ Successfully generated sitemap.xml (${entries.length} URLs), robots.txt, and ads.txt in public/`);
+} catch (writeErr) {
+  console.warn('⚠️ Sitemap generation notice:', writeErr.message);
 }
-
-fs.writeFileSync(path.join(publicDir, 'sitemap.xml'), sitemapXml, 'utf8');
-fs.writeFileSync(path.join(publicDir, 'robots.txt'), robotsTxt, 'utf8');
-fs.writeFileSync(path.join(publicDir, 'ads.txt'), adsTxt, 'utf8');
-
-console.log(`✅ Successfully generated sitemap.xml (${entries.length} URLs), robots.txt, and ads.txt in public/`);
