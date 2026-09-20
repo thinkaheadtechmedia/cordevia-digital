@@ -26,3 +26,214 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #334155;
 }
+
+/* ==========================================================================
+   High-Contrast Light Mode Overrides (Activated via html.light)
+   ========================================================================== */
+html.light {
+  color-scheme: light;
+}
+
+html.light ::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+html.light ::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+}
+html.light ::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+html.light body {
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+}
+
+/* Global App Root in Light Mode */
+html.light .min-h-screen {
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+}
+
+/* Surfaces & Container Backgrounds */
+html.light .bg-\[\#090D16\],
+html.light .bg-\[\#04060A\],
+html.light .bg-\[\#070B14\],
+html.light .bg-\[\#04060a\],
+html.light .bg-\[\#0A0E18\],
+html.light .bg-\[\#0A1220\],
+html.light .bg-\[\#0e1726\] {
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+}
+
+html.light .bg-\[\#0B1120\],
+html.light .bg-\[\#0B1426\],
+html.light .bg-\[\#080D18\],
+html.light .bg-\[\#080d18\] {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+}
+
+html.light .bg-slate-950,
+html.light .bg-slate-950\/80,
+html.light .bg-slate-950\/60 {
+  background-color: #f1f5f9 !important;
+  color: #0f172a !important;
+}
+
+html.light .bg-slate-900,
+html.light .bg-slate-900\/90,
+html.light .bg-slate-900\/80,
+html.light .bg-slate-900\/70,
+html.light .bg-slate-900\/60,
+html.light .bg-slate-900\/50,
+html.light .bg-slate-900\/40 {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+}
+
+html.light .bg-slate-800,
+html.light .bg-slate-800\/80,
+html.light .bg-slate-800\/60,
+html.light .bg-slate-800\/50 {
+  background-color: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+/* High-Contrast Borders */
+html.light .border-slate-800,
+html.light .border-slate-800\/90,
+html.light .border-slate-800\/80,
+html.light .border-slate-800\/60,
+html.light .border-slate-800\/50,
+html.light .border-slate-800\/40,
+html.light .border-slate-900 {
+  border-color: #cbd5e1 !important;
+}
+
+html.light .border-slate-700,
+html.light .border-slate-700\/60,
+html.light .border-slate-700\/50 {
+  border-color: #94a3b8 !important;
+}
+
+/* High-Contrast Typography */
+html.light .text-white,
+html.light .text-slate-100,
+html.light .text-slate-200 {
+  color: #0f172a !important;
+}
+
+html.light .text-slate-300 {
+  color: #1e293b !important;
+}
+
+html.light .text-slate-400 {
+  color: #334155 !important;
+}
+
+html.light .text-slate-500 {
+  color: #475569 !important;
+}
+
+/* Vibrant High-Contrast Brand Accents */
+html.light .text-cyan-300,
+html.light .text-cyan-400 {
+  color: #0284c7 !important;
+}
+
+html.light .text-teal-300,
+html.light .text-teal-400 {
+  color: #0d9488 !important;
+}
+
+html.light .text-emerald-300,
+html.light .text-emerald-400 {
+  color: #059669 !important;
+}
+
+html.light .text-purple-300,
+html.light .text-purple-400 {
+  color: #7c3aed !important;
+}
+
+html.light .bg-cyan-950,
+html.light .bg-cyan-950\/80,
+html.light .bg-cyan-950\/70,
+html.light .bg-cyan-950\/60,
+html.light .bg-cyan-950\/50,
+html.light .bg-cyan-950\/40,
+html.light .bg-cyan-950\/20 {
+  background-color: #e0f2fe !important;
+  color: #0369a1 !important;
+  border-color: #bae6fd !important;
+}
+
+html.light .bg-emerald-950,
+html.light .bg-emerald-950\/80,
+html.light .bg-emerald-950\/70,
+html.light .bg-emerald-950\/60 {
+  background-color: #ecfdf5 !important;
+  color: #047857 !important;
+  border-color: #a7f3d0 !important;
+}
+
+html.light .bg-amber-950,
+html.light .bg-amber-950\/80,
+html.light .bg-amber-950\/60,
+html.light .bg-amber-950\/40,
+html.light .bg-amber-950\/20 {
+  background-color: #fef3c7 !important;
+  color: #92400e !important;
+  border-color: #fde68a !important;
+}
+
+html.light .bg-purple-950,
+html.light .bg-purple-950\/70,
+html.light .bg-purple-950\/60 {
+  background-color: #f5f3ff !important;
+  color: #6d28d9 !important;
+  border-color: #ddd6fe !important;
+}
+
+/* Header, Navigation & Banner */
+html.light header,
+html.light nav {
+  background-color: rgba(255, 255, 255, 0.96) !important;
+  border-color: #cbd5e1 !important;
+}
+
+html.light aside[aria-label="Official Assets Download Banner"] {
+  background: linear-gradient(to right, #e0f2fe, #f1f5f9, #ffffff) !important;
+  border-color: #93c5fd !important;
+}
+
+/* Form Controls & Inputs */
+html.light input,
+html.light textarea,
+html.light select {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+}
+
+html.light input::placeholder,
+html.light textarea::placeholder {
+  color: #64748b !important;
+}
+
+/* Code & Pre Blocks */
+html.light code,
+html.light pre {
+  background-color: #f1f5f9 !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+}
+
+/* Footers */
+html.light footer {
+  background-color: #f8fafc !important;
+  border-color: #cbd5e1 !important;
+}
+

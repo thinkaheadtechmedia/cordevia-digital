@@ -40,6 +40,20 @@
           }
         }, true);
       })();
+
+      // Instant Theme Initializer to prevent flicker
+      (function() {
+        try {
+          var saved = localStorage.getItem('cordevia_theme');
+          if (saved === 'light') {
+            document.documentElement.classList.remove('dark');
+            document.documentElement.classList.add('light');
+          } else {
+            document.documentElement.classList.remove('light');
+            document.documentElement.classList.add('dark');
+          }
+        } catch (_) {}
+      })();
     </script>
     <title>Cordevia Digital</title>
     <meta name="description" content="Rank #1 on Google with Cordevia Digital. Premier media-tech agency for algorithmic SEO, YouTube channel management, high-performance web engineering, and digital commerce." />

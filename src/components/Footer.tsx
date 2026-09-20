@@ -23,13 +23,15 @@ import {
   Database,
   Lock
 } from 'lucide-react';
+import { downloadAsset } from '../utils/downloadHelper';
 
 interface FooterProps {
   onNavigate: (tab: ViewTab) => void;
   onShowToast: (title: string, message: string, type: 'success' | 'info') => void;
+  onOpenAvatarModal?: () => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onNavigate, onShowToast }) => {
+export const Footer: React.FC<FooterProps> = ({ onNavigate, onShowToast, onOpenAvatarModal }) => {
   const [isLeadsModalOpen, setIsLeadsModalOpen] = useState(false);
   const [leadsCount, setLeadsCount] = useState(0);
 
@@ -248,6 +250,32 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onShowToast }) => {
               <li>
                 <button onClick={() => handleNav('about')} className="hover:text-cyan-400 transition-colors">
                   About Cordevia Digital
+                </button>
+              </li>
+              {onOpenAvatarModal && (
+                <li>
+                  <button 
+                    onClick={onOpenAvatarModal} 
+                    className="text-cyan-400 hover:text-cyan-300 transition-colors flex items-center gap-1 font-medium"
+                  >
+                    <span>Social Media Avatar Studio</span>
+                    <span className="text-[9px] uppercase px-1.5 py-0.5 rounded bg-cyan-950 border border-cyan-800 text-cyan-300">HD</span>
+                  </button>
+                </li>
+              )}
+              <li>
+                <button 
+                  onClick={async () => {
+                    onShowToast('Downloading Package', 'cordevia-profile-pictures.zip is downloading...', 'info');
+                    const ok = await downloadAsset('/cordevia-profile-pictures.zip', 'cordevia-profile-pictures.zip');
+                    if (ok) {
+                      onShowToast('Download Complete', 'Saved cordevia-profile-pictures.zip to Downloads folder.', 'success');
+                    }
+                  }}
+                  className="text-slate-400 hover:text-cyan-300 transition-colors flex items-center gap-1.5"
+                >
+                  <span>Download Avatar Pack (.ZIP)</span>
+                  <span className="text-[9px] uppercase px-1 py-0.2 rounded bg-slate-800 border border-slate-700 text-slate-300">ZIP</span>
                 </button>
               </li>
               <li>

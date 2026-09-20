@@ -17,6 +17,8 @@ import { ContactView } from './components/views/ContactView';
 import { LegalView } from './components/views/LegalView';
 import { SEOConsoleView } from './components/views/SEOConsoleView';
 import { CookieConsentBanner } from './components/CookieConsentBanner';
+import { SocialAvatarModal } from './components/SocialAvatarModal';
+import { AvatarDownloadBanner } from './components/AvatarDownloadBanner';
 
 export default function App() {
   const [currentTab, setCurrentTab] = useState<ViewTab>('home');
@@ -24,8 +26,48 @@ export default function App() {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false);
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
   const [selectedServiceForContact, setSelectedServiceForContact] = useState<string>('');
+  
+  // Theme state: persists in localStorage (dark vs high-contrast light mode)
+  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
+    try {
+      const saved = localStorage.getItem('cordevia_theme');
+      if (saved === 'light' || saved === 'dark') return saved;
+    } catch {
+      // ignore
+    }
+    return 'dark';
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('cordevia_theme', theme);
+    } catch {
+      // ignore
+    }
+
+    if (theme === 'light') {
+      document.documentElement.classList.remove('dark');
+      document.documentElement.classList.add('light');
+    } else {
+      document.documentElement.classList.remove('light');
+      document.documentElement.classList.add('dark');
+    }
+  }, [theme]);
+
+  const handleToggleTheme = () => {
+    const nextTheme = theme === 'dark' ? 'light' : 'dark';
+    setTheme(nextTheme);
+    showToast(
+      nextTheme === 'light' ? 'Light Mode Activated' : 'Dark Mode Activated',
+      nextTheme === 'light' 
+        ? 'Switched to High-Contrast Light Mode with maximum legibility (WCAG AAA).'
+        : 'Switched to Default Obsidian Dark Theme.',
+      'info'
+    );
+  };
 
   // Keyboard shortcut Cmd+K or Ctrl+K for search
   useEffect(() => {
@@ -114,6 +156,15 @@ export default function App() {
         cartCount={cartCount}
         onOpenCart={() => setIsCartOpen(true)}
         onOpenSearch={() => setIsSearchOpen(true)}
+        onOpenAvatarModal={() => setIsAvatarModalOpen(true)}
+        theme={theme}
+        onToggleTheme={handleToggleTheme}
+      />
+
+      {/* Official Assets Download Banner */}
+      <AvatarDownloadBanner
+        onOpenStudio={() => setIsAvatarModalOpen(true)}
+        onShowToast={showToast}
       />
 
       {/* Main View Router */}
@@ -150,7 +201,11 @@ export default function App() {
         )}
 
         {currentTab === 'about' && (
-          <AboutView onNavigate={handleNavigate} />
+          <AboutView 
+            onNavigate={handleNavigate} 
+            onOpenAvatarModal={() => setIsAvatarModalOpen(true)}
+            onShowToast={showToast}
+          />
         )}
 
         {currentTab === 'contact' && (
@@ -180,12 +235,19 @@ export default function App() {
       <Footer 
         onNavigate={handleNavigate} 
         onShowToast={showToast} 
+        onOpenAvatarModal={() => setIsAvatarModalOpen(true)}
       />
 
       {/* GDPR & Google AdSense Compliant Cookie Consent Banner */}
       <CookieConsentBanner
         onOpenPrivacy={() => handleNavigate('privacy')}
         onOpenDisclosure={() => handleNavigate('disclosure')}
+      />
+
+      {/* Social Media Profile Picture / Avatar Studio Modal */}
+      <SocialAvatarModal
+        isOpen={isAvatarModalOpen}
+        onClose={() => setIsAvatarModalOpen(false)}
       />
 
       {/* Cart Drawer */}

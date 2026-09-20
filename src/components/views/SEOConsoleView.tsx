@@ -9,6 +9,7 @@ import {
   BASE_CANONICAL_URL,
   SitemapEntry 
 } from '../../utils/sitemapGenerator';
+import { TechnicalAuditTool } from '../seo/TechnicalAuditTool';
 import { 
   FileCode, 
   CheckCircle2, 
@@ -29,7 +30,8 @@ import {
   Sliders, 
   ArrowRight,
   Eye,
-  Code2
+  Code2,
+  Zap
 } from 'lucide-react';
 
 interface SEOConsoleViewProps {
@@ -38,7 +40,7 @@ interface SEOConsoleViewProps {
 }
 
 export const SEOConsoleView: React.FC<SEOConsoleViewProps> = ({ onNavigate, onShowToast }) => {
-  const [activeTab, setActiveTab] = useState<'sitemap' | 'search-console' | 'adsense' | 'robots'>('sitemap');
+  const [activeTab, setActiveTab] = useState<'audit' | 'sitemap' | 'search-console' | 'adsense' | 'robots'>('audit');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [copiedSection, setCopiedSection] = useState<string | null>(null);
@@ -104,15 +106,30 @@ export const SEOConsoleView: React.FC<SEOConsoleViewProps> = ({ onNavigate, onSh
           <span>Automated Technical SEO & Google Master Console</span>
         </div>
         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight">
-          Automated XML Sitemap & Google Indexing Engine
+          Automated Technical SEO & Google Indexing Engine
         </h1>
         <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
-          Dynamic XML sitemap generation conforming to <code className="text-cyan-400 font-mono">sitemaps.org 0.9</code> and Google Image protocols. Streamlined for Google Search Console sub-second discovery, Googlebot crawl efficiency, and 100% Google AdSense policy compliance.
+          Audit any URL for real-time Googlebot crawlability, Core Web Vitals, and an actionable technical improvement checklist. Export dynamic XML sitemaps conforming to <code className="text-cyan-400 font-mono">sitemaps.org 0.9</code> for guaranteed Google Search Console indexing.
         </p>
       </div>
 
       {/* Primary Tab Switcher */}
-      <div className="flex flex-wrap items-center justify-center p-1.5 bg-[#0B1120] border border-slate-800 rounded-2xl max-w-3xl mx-auto gap-1">
+      <div className="flex flex-wrap items-center justify-center p-1.5 bg-[#0B1120] border border-slate-800 rounded-2xl max-w-4xl mx-auto gap-1">
+        <button
+          onClick={() => setActiveTab('audit')}
+          className={`flex-1 min-w-[170px] py-2.5 px-4 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-2 ${
+            activeTab === 'audit'
+              ? 'bg-cyan-950 text-cyan-300 border border-cyan-700/60 shadow-lg shadow-cyan-950/50'
+              : 'text-slate-400 hover:text-white hover:bg-slate-900/60'
+          }`}
+        >
+          <Zap className="w-4 h-4 text-cyan-400 fill-current" />
+          <span>URL Audit & Score</span>
+          <span className="px-1.5 py-0.5 rounded-full bg-cyan-900/60 text-cyan-300 text-[10px] font-mono">
+            Interactive
+          </span>
+        </button>
+
         <button
           onClick={() => setActiveTab('sitemap')}
           className={`flex-1 min-w-[160px] py-2.5 px-4 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-2 ${
@@ -145,7 +162,7 @@ export const SEOConsoleView: React.FC<SEOConsoleViewProps> = ({ onNavigate, onSh
 
         <button
           onClick={() => setActiveTab('adsense')}
-          className={`flex-1 min-w-[160px] py-2.5 px-4 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-2 ${
+          className={`flex-1 min-w-[150px] py-2.5 px-4 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-2 ${
             activeTab === 'adsense'
               ? 'bg-cyan-950 text-cyan-300 border border-cyan-700/60 shadow-lg shadow-cyan-950/50'
               : 'text-slate-400 hover:text-white hover:bg-slate-900/60'
@@ -170,6 +187,11 @@ export const SEOConsoleView: React.FC<SEOConsoleViewProps> = ({ onNavigate, onSh
           <span>Robots & Ads.txt</span>
         </button>
       </div>
+
+      {/* TAB 0: INTERACTIVE TECHNICAL AUDIT & URL SCORE */}
+      {activeTab === 'audit' && (
+        <TechnicalAuditTool onShowToast={onShowToast} />
+      )}
 
       {/* TAB 1: DYNAMIC XML SITEMAP */}
       {activeTab === 'sitemap' && (

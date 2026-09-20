@@ -9,7 +9,9 @@ import {
   ArrowRight, 
   Sparkles, 
   Calculator,
-  Compass
+  Compass,
+  Sun,
+  Moon
 } from 'lucide-react';
 
 interface NavbarProps {
@@ -18,6 +20,9 @@ interface NavbarProps {
   cartCount: number;
   onOpenCart: () => void;
   onOpenSearch: () => void;
+  onOpenAvatarModal?: () => void;
+  theme?: 'dark' | 'light';
+  onToggleTheme?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -26,6 +31,9 @@ export const Navbar: React.FC<NavbarProps> = ({
   cartCount,
   onOpenCart,
   onOpenSearch,
+  onOpenAvatarModal,
+  theme = 'dark',
+  onToggleTheme,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -99,6 +107,23 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Quick Actions & Utilities */}
           <div className="flex items-center gap-2.5">
+            {/* Social Avatar Kit Quick Trigger */}
+            {onOpenAvatarModal && (
+              <button
+                onClick={onOpenAvatarModal}
+                className="hidden md:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-xs font-semibold transition-all bg-gradient-to-r from-cyan-950/80 to-slate-900 hover:bg-slate-800 border-cyan-700/60 text-cyan-300 hover:text-white hover:border-cyan-400 shadow-sm"
+                title="Cordevia Digital Official Social Profile Picture & Avatar Package (ZIP)"
+              >
+                <img 
+                  src="/cordevia-avatar-circular.svg" 
+                  alt="Avatar" 
+                  className="w-4 h-4 rounded-full" 
+                  referrerPolicy="no-referrer" 
+                />
+                <span>Profile Pic (.ZIP)</span>
+              </button>
+            )}
+
             {/* SEO & Sitemap Engine Hub Quick Link */}
             <button
               onClick={() => handleNav('seo-console')}
@@ -139,6 +164,25 @@ export const Navbar: React.FC<NavbarProps> = ({
                 </span>
               )}
             </button>
+
+            {/* User-Controlled Theme Toggle (Dark vs High-Contrast Light) */}
+            {onToggleTheme && (
+              <button
+                onClick={onToggleTheme}
+                className="p-2.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-cyan-400 hover:border-slate-700 transition-all flex items-center justify-center relative group"
+                aria-label={theme === 'light' ? 'Switch to Dark Mode' : 'Switch to High-Contrast Light Mode'}
+                title={theme === 'light' ? 'Active: High-Contrast Light Mode. Click to switch to Dark Obsidian.' : 'Active: Dark Obsidian Mode. Click to switch to High-Contrast Light Mode.'}
+              >
+                {theme === 'light' ? (
+                  <Moon className="w-4 h-4 text-indigo-400 group-hover:scale-110 transition-transform" />
+                ) : (
+                  <Sun className="w-4 h-4 text-amber-400 group-hover:scale-110 transition-transform" />
+                )}
+                <span className="sr-only">
+                  {theme === 'light' ? 'Switch to Dark Mode' : 'Switch to High-Contrast Light Mode'}
+                </span>
+              </button>
+            )}
 
             {/* Request Proposal Primary CTA */}
             <button
@@ -183,6 +227,45 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
 
             <div className="pt-3 border-t border-slate-800 flex flex-col gap-2">
+              {/* Mobile Theme Toggle */}
+              {onToggleTheme && (
+                <div className="flex items-center justify-between p-3 rounded-xl bg-slate-900/90 border border-slate-800">
+                  <div className="flex items-center gap-2.5">
+                    {theme === 'light' ? (
+                      <Sun className="w-4 h-4 text-amber-400" />
+                    ) : (
+                      <Moon className="w-4 h-4 text-indigo-400" />
+                    )}
+                    <div>
+                      <div className="text-xs font-bold text-white">
+                        {theme === 'light' ? 'High-Contrast Light Mode' : 'Default Obsidian Dark'}
+                      </div>
+                      <div className="text-[10px] text-slate-400">
+                        {theme === 'light' ? 'WCAG AAA Enhanced Readability' : 'Low-Glare Dark Palette'}
+                      </div>
+                    </div>
+                  </div>
+                  <button
+                    onClick={onToggleTheme}
+                    className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-750 border border-slate-700 text-xs font-mono font-bold text-cyan-300 transition-colors"
+                  >
+                    Switch to {theme === 'light' ? 'Dark' : 'Light'}
+                  </button>
+                </div>
+              )}
+
+              {onOpenAvatarModal && (
+                <button
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    onOpenAvatarModal();
+                  }}
+                  className="w-full py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 border border-cyan-900/50 text-slate-200 text-xs font-semibold text-center flex items-center justify-center gap-2"
+                >
+                  <img src="/cordevia-avatar-circular.svg" alt="Avatar" className="w-4 h-4 rounded-full" referrerPolicy="no-referrer" />
+                  <span>Social Avatar & Brand Profile Kit (1024x1024)</span>
+                </button>
+              )}
               <button
                 onClick={() => handleNav('seo-console')}
                 className="w-full py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-cyan-300 font-mono text-xs font-semibold text-center flex items-center justify-center gap-2"

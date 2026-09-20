@@ -10,14 +10,51 @@ import {
   Users, 
   ArrowRight, 
   Clock, 
-  CheckCircle2 
+  CheckCircle2,
+  Download,
+  Palette,
+  Eye,
+  ExternalLink,
+  FolderArchive,
+  Copy,
+  Check,
+  Image as ImageIcon
 } from 'lucide-react';
+import { downloadAsset, downloadSvgAsPng, OFFICIAL_CIRCULAR_SVG } from '../../utils/downloadHelper';
 
 interface AboutViewProps {
   onNavigate: (tab: ViewTab) => void;
+  onOpenAvatarModal?: () => void;
+  onShowToast?: (title: string, message: string, type: 'success' | 'info') => void;
 }
 
-export const AboutView: React.FC<AboutViewProps> = ({ onNavigate }) => {
+export const AboutView: React.FC<AboutViewProps> = ({ onNavigate, onOpenAvatarModal, onShowToast }) => {
+  const [downloadingZip, setDownloadingZip] = React.useState(false);
+  const [downloadingPng, setDownloadingPng] = React.useState(false);
+  const [copiedLink, setCopiedLink] = React.useState(false);
+
+  const handleDownloadZip = async () => {
+    setDownloadingZip(true);
+    onShowToast?.('Downloading Package', 'cordevia-profile-pictures.zip is downloading...', 'info');
+    try {
+      const ok = await downloadAsset('/cordevia-profile-pictures.zip', 'cordevia-profile-pictures.zip');
+      if (ok) {
+        onShowToast?.('Download Complete', 'Saved cordevia-profile-pictures.zip to your Downloads folder.', 'success');
+      }
+    } catch {
+      onShowToast?.('Download Triggered', 'cordevia-profile-pictures.zip initiated.', 'info');
+    } finally {
+      setDownloadingZip(false);
+    }
+  };
+
+  const handleCopyDirectLink = () => {
+    const directUrl = `${window.location.origin}/cordevia-profile-pictures.zip`;
+    navigator.clipboard.writeText(directUrl);
+    setCopiedLink(true);
+    onShowToast?.('URL Copied', 'Direct download link copied to clipboard.', 'success');
+    setTimeout(() => setCopiedLink(false), 2000);
+  };
   const milestones = [
     {
       year: '2019',
@@ -108,6 +145,141 @@ export const AboutView: React.FC<AboutViewProps> = ({ onNavigate }) => {
             <div className="text-xs text-slate-400 font-medium">{item.label}</div>
           </div>
         ))}
+      </div>
+
+      {/* Official Brand Identity & Social Avatar Kit Showcase */}
+      <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-[#0B101F] via-[#090D18] to-cyan-950/40 border border-cyan-900/40 shadow-xl relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
+        
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
+          
+          {/* Avatar Graphic Preview */}
+          <div className="lg:col-span-4 flex flex-col items-center text-center">
+            <div className="relative group">
+              {/* Outer halo */}
+              <div className="absolute -inset-1 rounded-full bg-gradient-to-tr from-cyan-500 via-teal-400 to-emerald-400 opacity-60 blur-md group-hover:opacity-100 transition-opacity" />
+              {/* Circular Avatar */}
+              <div className="relative w-40 h-40 sm:w-48 sm:h-48 rounded-full overflow-hidden border-2 border-cyan-400/80 shadow-2xl bg-[#080d18]">
+                <img 
+                  src="/cordevia-avatar-circular.svg" 
+                  alt="Cordevia Digital Official Social Media Profile Avatar" 
+                  className="w-full h-full object-cover"
+                  referrerPolicy="no-referrer"
+                />
+              </div>
+              <span className="absolute bottom-1 right-3 bg-cyan-950 text-cyan-300 font-mono text-[10px] font-bold px-2 py-0.5 rounded-full border border-cyan-500/60 shadow">
+                1024 × 1024
+              </span>
+            </div>
+            <span className="text-xs text-slate-400 mt-3 font-mono">
+              Official Cordevia Digital Monogram CD
+            </span>
+          </div>
+
+          {/* Asset Info & Controls */}
+          <div className="lg:col-span-8 space-y-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/80 border border-cyan-800/60 text-cyan-400 text-xs font-semibold">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Official Brand Kit & Social Asset Suite</span>
+            </div>
+
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
+              Social Media Profile Picture & Identity Mark
+            </h2>
+
+            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+              Engineered specifically for circular crop boundaries across <strong>YouTube, X (Twitter), LinkedIn, Instagram, TikTok, WhatsApp, and Telegram</strong>. Features optical centering, a 3D metallic bevel monogram, obsidian space depth, and vibrant electric cyan/emerald neon edge illumination.
+            </p>
+
+            {/* Spec Badges */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1 text-xs">
+              <div className="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
+                <span className="text-[10px] text-slate-500 uppercase block font-semibold">Master Resolution</span>
+                <span className="text-white font-mono font-bold">1024 × 1024 px</span>
+              </div>
+              <div className="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
+                <span className="text-[10px] text-slate-500 uppercase block font-semibold">Format</span>
+                <span className="text-cyan-400 font-mono font-bold">HD PNG & SVG Vector</span>
+              </div>
+              <div className="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
+                <span className="text-[10px] text-slate-500 uppercase block font-semibold">Safe Zone</span>
+                <span className="text-emerald-400 font-mono font-bold">Circular Verified</span>
+              </div>
+              <div className="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
+                <span className="text-[10px] text-slate-500 uppercase block font-semibold">Color Space</span>
+                <span className="text-teal-300 font-mono font-bold">sRGB Web Optimized</span>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex flex-wrap items-center gap-3 pt-2">
+              <button
+                onClick={handleDownloadZip}
+                disabled={downloadingZip}
+                className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-teal-400 text-slate-950 font-black text-xs hover:opacity-95 shadow-md shadow-cyan-500/20 flex items-center gap-2 transition-all active:scale-95"
+              >
+                <FolderArchive className="w-4 h-4 text-slate-950" />
+                <span>{downloadingZip ? 'Downloading ZIP Package...' : 'Download Profile Picture Folder (.ZIP)'}</span>
+              </button>
+
+              <button
+                onClick={handleCopyDirectLink}
+                className="px-3.5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 text-xs font-semibold flex items-center gap-1.5 transition-colors"
+                title="Copy direct download link"
+              >
+                {copiedLink ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5 text-slate-400" />}
+                <span>{copiedLink ? 'Link Copied!' : 'Copy Direct Link'}</span>
+              </button>
+
+              {onOpenAvatarModal && (
+                <button
+                  onClick={onOpenAvatarModal}
+                  className="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-cyan-300 border border-cyan-800/80 text-xs font-semibold hover:border-cyan-500/60 transition-all flex items-center gap-1.5"
+                >
+                  <Palette className="w-3.5 h-3.5 text-cyan-400" />
+                  <span>Avatar Studio & Live Mockups</span>
+                </button>
+              )}
+
+              <button
+                onClick={async () => {
+                  setDownloadingPng(true);
+                  onShowToast?.('Rendering PNG', 'Generating crisp 1024x1024 profile picture PNG...', 'info');
+                  try {
+                    await downloadSvgAsPng(OFFICIAL_CIRCULAR_SVG, 1024, 'cordevia-digital-avatar-1024x1024.png');
+                    onShowToast?.('PNG Ready', 'cordevia-digital-avatar-1024x1024.png saved!', 'success');
+                  } finally {
+                    setDownloadingPng(false);
+                  }
+                }}
+                disabled={downloadingPng}
+                className="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700 text-xs font-semibold flex items-center gap-1.5 transition-colors"
+                title="Download 1024x1024 HD PNG directly"
+              >
+                <ImageIcon className="w-3.5 h-3.5 text-sky-400" />
+                <span>{downloadingPng ? 'Rendering...' : '1024px HD PNG'}</span>
+              </button>
+
+              <button
+                onClick={() => downloadAsset('/cordevia-social-profile-picture.svg', 'cordevia-digital-profile-picture.svg')}
+                className="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700 text-xs font-semibold flex items-center gap-1.5 transition-colors"
+              >
+                <Download className="w-3.5 h-3.5 text-cyan-400" />
+                <span>Master SVG</span>
+              </button>
+
+              <button
+                onClick={() => downloadAsset('/cordevia-avatar-circular.svg', 'cordevia-digital-avatar-circular.svg')}
+                className="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700 text-xs font-semibold flex items-center gap-1.5 transition-colors"
+              >
+                <Download className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Circular SVG</span>
+              </button>
+            </div>
+
+          </div>
+
+        </div>
       </div>
 
       {/* Evolution Timeline */}
