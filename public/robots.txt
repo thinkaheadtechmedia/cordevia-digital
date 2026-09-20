@@ -1,0 +1,39 @@
+# Cordevia Digital Robots.txt
+# Fully optimized for Googlebot, AdsBot-Google, Bingbot, and AI Search Crawlers
+
+User-agent: *
+Allow: /
+Allow: /services
+Allow: /blog
+Allow: /marketplace
+Allow: /about
+Allow: /contact
+Allow: /privacy
+Allow: /terms
+Allow: /disclosure
+Allow: /dmca
+Allow: /seo-console
+Disallow: /api/
+Disallow: /*?*filter=
+Disallow: /*?*sort=
+
+# Googlebot specific directives
+User-agent: Googlebot
+Allow: /
+Allow: /*.js$
+Allow: /*.css$
+Allow: /*.png$
+Allow: /*.jpg$
+Allow: /*.svg$
+Allow: /*.webp$
+
+# Google AdSense Crawler
+User-agent: Mediapartners-Google
+Allow: /
+
+# Google Ads Quality Crawler
+User-agent: AdsBot-Google
+Allow: /
+
+# Canonical Sitemap Declaration
+Sitemap: https://cordeviadigital.com/sitemap.xml

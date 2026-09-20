@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      (function() {
+        try {
+          var originalFetch = window.fetch;
+          var currentFetch = originalFetch;
+          Object.defineProperty(window, 'fetch', {
+            get: function() {
+              return currentFetch;
+            },
+            set: function(fn) {
+              currentFetch = fn;
+            },
+            configurable: true,
+            enumerable: true
+          });
+        } catch (_) {
+          try {
+            var protoFetch = Window.prototype.fetch;
+            Object.defineProperty(Window.prototype, 'fetch', {
+              get: function() {
+                return protoFetch;
+              },
+              set: function(fn) {
+                protoFetch = fn;
+              },
+              configurable: true,
+              enumerable: true
+            });
+          } catch (__) {}
+        }
+        window.addEventListener('error', function(e) {
+          if (e && e.message && e.message.indexOf('Cannot set property fetch of #<Window>') !== -1) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+          }
+        }, true);
+      })();
+    </script>
+    <title>Cordevia Digital</title>
+    <meta name="description" content="Rank #1 on Google with Cordevia Digital. Premier media-tech agency for algorithmic SEO, YouTube channel management, high-performance web engineering, and digital commerce." />
+    <meta name="keywords" content="Cordevia Digital, rank first page on google, best SEO agency, algorithmic SEO, YouTube growth agency, technical SEO audit, high performance web engineering, digital media tech, Cameroon MOMO, Binance crypto pay, Cordevia Store" />
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+    <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+    <link rel="canonical" href="https://cordeviadigital.com/" />
+    
+    <!-- Favicon & Brand Icons -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate icon" type="image/png" href="/favicon.png" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#090D16" />
+
+    <meta property="og:title" content="Cordevia Digital" />
+    <meta property="og:description" content="Rank #1 on Google with Cordevia Digital. Premier media-tech agency for algorithmic SEO, YouTube channel management, high-performance web engineering, and digital commerce." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://cordeviadigital.com/" />
+    <meta property="og:site_name" content="Cordevia Digital" />
+    <meta property="og:locale" content="en_US" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@cordeviadigital" />
+    <meta name="twitter:creator" content="@cordeviadigital" />
+    <meta name="twitter:title" content="Cordevia Digital" />
+    <meta name="twitter:description" content="Rank #1 on Google with Cordevia Digital. Premier media-tech agency for algorithmic SEO, YouTube channel management, high-performance web engineering, and digital commerce." />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  </head>
+  <body class="bg-[#090D16] text-slate-100 font-sans antialiased selection:bg-cyan-500/20 selection:text-cyan-300 min-h-screen">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+
