@@ -18,7 +18,6 @@ import { LegalView } from './components/views/LegalView';
 import { SEOConsoleView } from './components/views/SEOConsoleView';
 import { CookieConsentBanner } from './components/CookieConsentBanner';
 import { SocialAvatarModal } from './components/SocialAvatarModal';
-import { AvatarDownloadBanner } from './components/AvatarDownloadBanner';
 
 export default function App() {
   const [currentTab, setCurrentTab] = useState<ViewTab>('home');
@@ -159,12 +158,6 @@ export default function App() {
         onOpenAvatarModal={() => setIsAvatarModalOpen(true)}
         theme={theme}
         onToggleTheme={handleToggleTheme}
-      />
-
-      {/* Official Assets Download Banner */}
-      <AvatarDownloadBanner
-        onOpenStudio={() => setIsAvatarModalOpen(true)}
-        onShowToast={showToast}
       />
 
       {/* Main View Router */}

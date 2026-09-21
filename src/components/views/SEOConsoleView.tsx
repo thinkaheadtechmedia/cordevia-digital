@@ -566,6 +566,21 @@ export const SEOConsoleView: React.FC<SEOConsoleViewProps> = ({ onNavigate, onSh
                 <p className="text-[11px] text-slate-400">Sub-second paint times satisfying all Google Search ranking thresholds.</p>
               </div>
 
+              <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-2 md:col-span-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-white flex items-center gap-1.5">
+                    <span>Google AdSense Site Ownership</span>
+                  </span>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-800/50 font-mono">Verified in &lt;head&gt;</span>
+                </div>
+                <code className="text-xs text-amber-300 font-mono block bg-slate-900/80 p-2 rounded-lg overflow-x-auto whitespace-pre">
+                  ca-pub-1983675798905014
+                </code>
+                <p className="text-[11px] text-slate-400">
+                  AdSense script tag with publisher client ID <code className="text-amber-300 font-mono">ca-pub-1983675798905014</code> is installed in the document &lt;head&gt; across all routes for instant crawler verification.
+                </p>
+              </div>
+
             </div>
           </div>
 
