@@ -142,15 +142,9 @@ Allow: /
 Sitemap: ${BASE_URL}/sitemap.xml
 `;
 
-const adsTxt = `# Cordevia Digital Authorized Digital Sellers (ads.txt)
-# Google AdSense Authorized Publisher Declaration
-# Documentation: https://support.google.com/adsense/answer/7532444
-
-google.com, pub-9204859182740192, DIRECT, f08c47fec0942fa0
-
-# Contact info for ad inventory verification
+const adsTxt = `# Google AdSense Authorized Digital Sellers (ads.txt)
+google.com, pub-1983675798905014, DIRECT, f08c47fec0942fa0
 contact=hello@cordeviadigital.com
-subdomain=cordeviadigital.com
 `;
 
 try {

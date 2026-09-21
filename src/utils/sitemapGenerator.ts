@@ -257,17 +257,11 @@ Sitemap: ${cleanBase}/sitemap.xml
 /**
  * Generates an authorized digital sellers ads.txt file for Google AdSense compliance.
  */
-export function generateAdsTxt(publisherId = 'pub-9204859182740192'): string {
+export function generateAdsTxt(publisherId = 'pub-1983675798905014'): string {
   const cleanPub = publisherId.replace(/^pub-/, '');
-  return `# Cordevia Digital Authorized Digital Sellers (ads.txt)
-# Google AdSense Authorized Publisher Declaration
-# Documentation: https://support.google.com/adsense/answer/7532444
-
+  return `# Google AdSense Authorized Digital Sellers (ads.txt)
 google.com, pub-${cleanPub}, DIRECT, f08c47fec0942fa0
-
-# Contact info for ad inventory verification
 contact=hello@cordeviadigital.com
-subdomain=cordeviadigital.com
 `;
 }
 

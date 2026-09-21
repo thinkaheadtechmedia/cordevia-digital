@@ -13,7 +13,7 @@ interface AdSenseUnitProps {
 
 export const AdSenseUnit: React.FC<AdSenseUnitProps> = ({
   slotId = '1234567890',
-  client = 'ca-pub-9204859182740192',
+  client = 'ca-pub-1983675798905014',
   format = 'auto',
   responsive = true,
   className = '',
