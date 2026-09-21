@@ -11,8 +11,10 @@ import {
   Calculator,
   Compass,
   Sun,
-  Moon
+  Moon,
+  ShieldCheck
 } from 'lucide-react';
+import { useAdminAuth } from '../utils/useAdminAuth';
 
 interface NavbarProps {
   currentTab: ViewTab;
@@ -35,6 +37,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   theme = 'dark',
   onToggleTheme,
 }) => {
+  const { isAdmin } = useAdminAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navLinks: { label: string; tab: ViewTab }[] = [
@@ -107,12 +110,12 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Quick Actions & Utilities */}
           <div className="flex items-center gap-2.5">
-            {/* Social Avatar Kit Quick Trigger */}
-            {onOpenAvatarModal && (
+            {/* Social Avatar Kit Quick Trigger - Admin Only */}
+            {isAdmin && onOpenAvatarModal && (
               <button
                 onClick={onOpenAvatarModal}
                 className="hidden md:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-xs font-semibold transition-all bg-gradient-to-r from-cyan-950/80 to-slate-900 hover:bg-slate-800 border-cyan-700/60 text-cyan-300 hover:text-white hover:border-cyan-400 shadow-sm"
-                title="Cordevia Digital Official Social Profile Picture & Avatar Package (ZIP)"
+                title="Cordevia Digital Official Social Profile Picture & Avatar Package (ZIP) - Admin Access"
               >
                 <img 
                   src="/cordevia-avatar-circular.svg" 
@@ -254,16 +257,16 @@ export const Navbar: React.FC<NavbarProps> = ({
                 </div>
               )}
 
-              {onOpenAvatarModal && (
+              {isAdmin && onOpenAvatarModal && (
                 <button
                   onClick={() => {
                     setMobileMenuOpen(false);
                     onOpenAvatarModal();
                   }}
-                  className="w-full py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 border border-cyan-900/50 text-slate-200 text-xs font-semibold text-center flex items-center justify-center gap-2"
+                  className="w-full py-2.5 px-4 rounded-xl bg-cyan-950/80 hover:bg-cyan-900 border border-cyan-700/60 text-cyan-200 text-xs font-semibold text-center flex items-center justify-center gap-2"
                 >
                   <img src="/cordevia-avatar-circular.svg" alt="Avatar" className="w-4 h-4 rounded-full" referrerPolicy="no-referrer" />
-                  <span>Social Avatar & Brand Profile Kit (1024x1024)</span>
+                  <span>Social Avatar & Brand Profile Kit (Admin Access)</span>
                 </button>
               )}
               <button

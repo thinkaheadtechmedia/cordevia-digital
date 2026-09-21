@@ -7,6 +7,7 @@ import {
   exportLeadsToJSON, 
   CapturedLead 
 } from '../utils/leadCapture';
+import { useAdminAuth } from '../utils/useAdminAuth';
 import { 
   Database, 
   Download, 
@@ -35,6 +36,7 @@ export const LeadsVaultModal: React.FC<LeadsVaultModalProps> = ({
   onClose,
   onShowToast,
 }) => {
+  const { isAdmin } = useAdminAuth();
   const [leads, setLeads] = useState<CapturedLead[]>([]);
   const [filterType, setFilterType] = useState<'all' | 'newsletter' | 'contact_inquiry' | 'marketplace_purchase'>('all');
   const [search, setSearch] = useState('');
@@ -59,7 +61,7 @@ export const LeadsVaultModal: React.FC<LeadsVaultModalProps> = ({
     return () => window.removeEventListener('cordevia_leads_updated', handleUpdate);
   }, []);
 
-  if (!isOpen) return null;
+  if (!isOpen || !isAdmin) return null;
 
   const filtered = leads.filter((l) => {
     const matchesType = filterType === 'all' || l.type === filterType;

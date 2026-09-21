@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { BRAND_INFO } from '../data/brandData';
 import { downloadAsset } from '../utils/downloadHelper';
+import { useAdminAuth } from '../utils/useAdminAuth';
 
 interface SocialAvatarModalProps {
   isOpen: boolean;
@@ -31,6 +32,7 @@ type ThemePreset = 'obsidian' | 'emerald' | 'titanium' | 'amber';
 type PlatformPreview = 'youtube' | 'x' | 'linkedin' | 'instagram' | 'telegram';
 
 export const SocialAvatarModal: React.FC<SocialAvatarModalProps> = ({ isOpen, onClose }) => {
+  const { isAdmin } = useAdminAuth();
   const [activeTheme, setActiveTheme] = useState<ThemePreset>('obsidian');
   const [activePlatform, setActivePlatform] = useState<PlatformPreview>('youtube');
   const [showSafeZone, setShowSafeZone] = useState(false);
@@ -39,7 +41,7 @@ export const SocialAvatarModal: React.FC<SocialAvatarModalProps> = ({ isOpen, on
   const [zipping, setZipping] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  if (!isOpen) return null;
+  if (!isOpen || !isAdmin) return null;
 
   // Theme palettes
   const themes = {

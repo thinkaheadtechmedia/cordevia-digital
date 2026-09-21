@@ -24,14 +24,18 @@ import {
   Lock
 } from 'lucide-react';
 import { downloadAsset } from '../utils/downloadHelper';
+import { useAdminAuth } from '../utils/useAdminAuth';
+import { AdminLoginModal } from './AdminLoginModal';
 
 interface FooterProps {
   onNavigate: (tab: ViewTab) => void;
-  onShowToast: (title: string, message: string, type: 'success' | 'info') => void;
+  onShowToast: (title: string, message: string, type: 'success' | 'info' | 'warning') => void;
   onOpenAvatarModal?: () => void;
 }
 
 export const Footer: React.FC<FooterProps> = ({ onNavigate, onShowToast, onOpenAvatarModal }) => {
+  const { isAdmin, logoutAdmin } = useAdminAuth();
+  const [isAdminLoginOpen, setIsAdminLoginOpen] = useState(false);
   const [isLeadsModalOpen, setIsLeadsModalOpen] = useState(false);
   const [leadsCount, setLeadsCount] = useState(0);
 
@@ -252,32 +256,35 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onShowToast, onOpenA
                   About Cordevia Digital
                 </button>
               </li>
-              {onOpenAvatarModal && (
+              {/* Admin-Only: Social Media Avatar Studio & Zip Pack */}
+              {isAdmin && onOpenAvatarModal && (
                 <li>
                   <button 
                     onClick={onOpenAvatarModal} 
                     className="text-cyan-400 hover:text-cyan-300 transition-colors flex items-center gap-1 font-medium"
                   >
                     <span>Social Media Avatar Studio</span>
-                    <span className="text-[9px] uppercase px-1.5 py-0.5 rounded bg-cyan-950 border border-cyan-800 text-cyan-300">HD</span>
+                    <span className="text-[9px] uppercase px-1.5 py-0.5 rounded bg-cyan-950 border border-cyan-800 text-cyan-300">Admin</span>
                   </button>
                 </li>
               )}
-              <li>
-                <button 
-                  onClick={async () => {
-                    onShowToast('Downloading Package', 'cordevia-profile-pictures.zip is downloading...', 'info');
-                    const ok = await downloadAsset('/cordevia-profile-pictures.zip', 'cordevia-profile-pictures.zip');
-                    if (ok) {
-                      onShowToast('Download Complete', 'Saved cordevia-profile-pictures.zip to Downloads folder.', 'success');
-                    }
-                  }}
-                  className="text-slate-400 hover:text-cyan-300 transition-colors flex items-center gap-1.5"
-                >
-                  <span>Download Avatar Pack (.ZIP)</span>
-                  <span className="text-[9px] uppercase px-1 py-0.2 rounded bg-slate-800 border border-slate-700 text-slate-300">ZIP</span>
-                </button>
-              </li>
+              {isAdmin && (
+                <li>
+                  <button 
+                    onClick={async () => {
+                      onShowToast('Downloading Package', 'cordevia-profile-pictures.zip is downloading...', 'info');
+                      const ok = await downloadAsset('/cordevia-profile-pictures.zip', 'cordevia-profile-pictures.zip');
+                      if (ok) {
+                        onShowToast('Download Complete', 'Saved cordevia-profile-pictures.zip to Downloads folder.', 'success');
+                      }
+                    }}
+                    className="text-slate-400 hover:text-cyan-300 transition-colors flex items-center gap-1.5"
+                  >
+                    <span>Download Avatar Pack (.ZIP)</span>
+                    <span className="text-[9px] uppercase px-1 py-0.2 rounded bg-cyan-950 border border-cyan-800 text-cyan-300">Admin</span>
+                  </button>
+                </li>
+              )}
               <li>
                 <button onClick={() => handleNav('contact')} className="hover:text-cyan-400 transition-colors">
                   Contact & Inquiries
@@ -347,22 +354,55 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onShowToast, onOpenA
             <button onClick={() => handleNav('terms')} className="hover:text-cyan-400">Terms</button>
             <button onClick={() => handleNav('disclosure')} className="hover:text-cyan-400">Ad Disclosure</button>
             <button onClick={() => handleNav('dmca')} className="hover:text-cyan-400">DMCA</button>
-            <button
-              onClick={() => setIsLeadsModalOpen(true)}
-              className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-cyan-500/40 text-slate-300 hover:text-cyan-300 transition-colors shadow-sm"
-              title="Open captured client proposals & subscriber leads vault"
-            >
-              <Database className="w-3.5 h-3.5 text-cyan-400" />
-              <span>Leads Vault</span>
-              {leadsCount > 0 && (
-                <span className="px-1.5 py-0.2 bg-cyan-950 text-cyan-300 rounded-full text-[10px] font-mono font-bold border border-cyan-800">
-                  {leadsCount}
-                </span>
-              )}
-            </button>
+            
+            {/* Leads Vault - Restricted to Admins */}
+            {isAdmin ? (
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setIsLeadsModalOpen(true)}
+                  className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-cyan-950 hover:bg-cyan-900 border border-cyan-800 text-cyan-300 transition-colors shadow-sm"
+                  title="Open captured client proposals & subscriber leads vault (Admin Only)"
+                >
+                  <Database className="w-3.5 h-3.5 text-cyan-400" />
+                  <span>Leads Vault</span>
+                  {leadsCount > 0 && (
+                    <span className="px-1.5 py-0.2 bg-cyan-900 text-cyan-200 rounded-full text-[10px] font-mono font-bold border border-cyan-700">
+                      {leadsCount}
+                    </span>
+                  )}
+                </button>
+                <button
+                  onClick={() => {
+                    logoutAdmin();
+                    onShowToast('Admin Logged Out', 'Locked admin sessions.', 'info');
+                  }}
+                  className="text-[10px] text-slate-500 hover:text-rose-400 underline"
+                  title="Log out of Admin Mode"
+                >
+                  Lock Admin
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => setIsAdminLoginOpen(true)}
+                className="flex items-center gap-1 px-2 py-1 rounded-lg bg-slate-900/60 hover:bg-slate-800 text-slate-500 hover:text-slate-300 border border-slate-800/80 text-[11px] transition-colors"
+                title="Admin Authentication Portal"
+              >
+                <Lock className="w-3 h-3 text-slate-500" />
+                <span>Admin</span>
+              </button>
+            )}
           </div>
         </div>
       </div>
+
+      {/* Admin Login Modal */}
+      <AdminLoginModal
+        isOpen={isAdminLoginOpen}
+        onClose={() => setIsAdminLoginOpen(false)}
+        onShowToast={onShowToast}
+        onSuccess={() => setIsLeadsModalOpen(true)}
+      />
 
       {/* Leads Vault Admin Modal */}
       <LeadsVaultModal
