@@ -25,7 +25,7 @@ try {
   // Extract blog slugs
   const slugMatches = [...content.matchAll(/slug:\s*['"]([^'"]+)['"]/g)].map(m => m[1]);
   if (slugMatches.length > 0) {
-    blogSlugs = slugMatches.filter(s => s !== 'all' && !s.includes('category') && !s.includes('strategy'));
+    blogSlugs = slugMatches.filter(s => s !== 'all' && s !== 'strategy' && s !== 'category' && !s.startsWith('category-'));
   }
 } catch (err) {
   console.log('Using default slugs for sitemap generation');
