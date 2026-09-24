@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ViewTab, CartItem, MarketplaceItem, ToastMessage, BlogPost } from './types';
+import { BLOG_POSTS, BLOG_CATEGORIES } from './data/brandData';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { CartDrawer } from './components/CartDrawer';
@@ -22,6 +23,7 @@ import { SocialAvatarModal } from './components/SocialAvatarModal';
 export default function App() {
   const [currentTab, setCurrentTab] = useState<ViewTab>('home');
   const [activePost, setActivePost] = useState<BlogPost | null>(null);
+  const [selectedBlogCategory, setSelectedBlogCategory] = useState<string>('all');
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -135,12 +137,88 @@ export default function App() {
 
   const cartCount = cart.reduce((total, i) => total + i.quantity, 0);
 
+  // Synchronize browser history and handle deep links / category URLs
+  useEffect(() => {
+    const parseUrl = () => {
+      if (typeof window === 'undefined') return;
+      try {
+        const path = window.location.pathname.replace(/^\/+|\/+$/g, '');
+        if (!path) {
+          setCurrentTab('home');
+          setActivePost(null);
+          return;
+        }
+
+        const segments = path.split('/');
+        const root = segments[0];
+
+        const validTabs: ViewTab[] = [
+          'home',
+          'services',
+          'blog',
+          'marketplace',
+          'about',
+          'contact',
+          'terms',
+          'privacy',
+          'disclosure',
+          'dmca',
+          'seo-console',
+        ];
+
+        if (root === 'blog') {
+          setCurrentTab('blog');
+          if (segments[1]) {
+            const subSlug = segments[1];
+            // Check if it's an individual blog post
+            const post = BLOG_POSTS.find((p) => p.slug === subSlug);
+            if (post) {
+              setActivePost(post);
+            } else {
+              // Check if it's a category slug (e.g. ai-automation, seo-search, web-engineering)
+              const cat = BLOG_CATEGORIES.find((c) => c.slug === subSlug || c.id === subSlug);
+              if (cat) {
+                setSelectedBlogCategory(cat.id);
+                setActivePost(null);
+              } else {
+                setActivePost(null);
+              }
+            }
+          } else {
+            setActivePost(null);
+          }
+        } else if (validTabs.includes(root as ViewTab)) {
+          setCurrentTab(root as ViewTab);
+          setActivePost(null);
+        }
+      } catch (_) {}
+    };
+
+    parseUrl();
+
+    const handlePopState = () => {
+      parseUrl();
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
   const handleNavigate = (tab: ViewTab) => {
     if (tab !== 'blog') {
       setActivePost(null);
     }
     setCurrentTab(tab);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    try {
+      if (typeof window !== 'undefined') {
+        const targetPath = tab === 'home' ? '/' : `/${tab}`;
+        if (window.location.pathname !== targetPath) {
+          window.history.pushState({ tab }, '', targetPath);
+        }
+      }
+    } catch (_) {}
   };
 
   return (
@@ -182,6 +260,8 @@ export default function App() {
             onNavigate={handleNavigate} 
             onShowToast={showToast}
             onActivePostChange={setActivePost}
+            initialPost={activePost}
+            initialCategory={selectedBlogCategory}
           />
         )}
 

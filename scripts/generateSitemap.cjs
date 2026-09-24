@@ -22,10 +22,13 @@ let productIds = ['prod-gemini-18m-pro', 'prod-yt-kit', 'prod-seo-audit', 'prod-
 try {
   const content = fs.readFileSync(brandDataFile, 'utf8');
   
-  // Extract blog slugs
-  const slugMatches = [...content.matchAll(/slug:\s*['"]([^'"]+)['"]/g)].map(m => m[1]);
+  // Extract blog slugs strictly from the BLOG_POSTS array
+  const blogPostsSection = content.split('export const BLOG_POSTS')[1] || content;
+  const categorySlugs = new Set(['ai-automation', 'seo-search', 'web-engineering', 'brand-growth', 'youtube-strategy', 'strategy', 'category', 'all']);
+  
+  const slugMatches = [...blogPostsSection.matchAll(/slug:\s*['"]([^'"]+)['"]/g)].map(m => m[1]);
   if (slugMatches.length > 0) {
-    blogSlugs = slugMatches.filter(s => s !== 'all' && s !== 'strategy' && s !== 'category' && !s.startsWith('category-'));
+    blogSlugs = slugMatches.filter(s => !categorySlugs.has(s) && !s.startsWith('category-'));
   }
 } catch (err) {
   console.log('Using default slugs for sitemap generation');

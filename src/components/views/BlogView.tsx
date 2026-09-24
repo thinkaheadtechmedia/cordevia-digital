@@ -38,14 +38,35 @@ interface BlogViewProps {
   onNavigate: (tab: ViewTab) => void;
   onShowToast: (title: string, message: string, type: 'success' | 'info') => void;
   onActivePostChange?: (post: BlogPost | null) => void;
+  initialPost?: BlogPost | null;
+  initialCategory?: string;
 }
 
-export const BlogView: React.FC<BlogViewProps> = ({ onNavigate, onShowToast, onActivePostChange }) => {
-  const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
-  const [activeCategory, setActiveCategory] = useState<string>('all');
+export const BlogView: React.FC<BlogViewProps> = ({ 
+  onNavigate, 
+  onShowToast, 
+  onActivePostChange,
+  initialPost = null,
+  initialCategory = 'all'
+}) => {
+  const [selectedPost, setSelectedPost] = useState<BlogPost | null>(initialPost);
+  const [activeCategory, setActiveCategory] = useState<string>(initialCategory);
   const [searchQuery, setSearchQuery] = useState('');
   const [isNewsletterModalOpen, setIsNewsletterModalOpen] = useState(false);
   const articleScrollRef = useRef<HTMLDivElement | null>(null);
+
+  // Sync external props if deep-linked or navigated externally
+  useEffect(() => {
+    if (initialPost !== undefined) {
+      setSelectedPost(initialPost);
+    }
+  }, [initialPost]);
+
+  useEffect(() => {
+    if (initialCategory) {
+      setActiveCategory(initialCategory);
+    }
+  }, [initialCategory]);
 
   // Map category icons dynamically
   const getCategoryIcon = (iconName: string) => {
@@ -65,7 +86,7 @@ export const BlogView: React.FC<BlogViewProps> = ({ onNavigate, onShowToast, onA
     }
   };
 
-  // Dynamically update SEO head metadata when opening or closing an article
+  // Dynamically update SEO head metadata and browser URL when opening or closing an article
   useEffect(() => {
     if (onActivePostChange) {
       onActivePostChange(selectedPost);
@@ -77,12 +98,23 @@ export const BlogView: React.FC<BlogViewProps> = ({ onNavigate, onShowToast, onA
       if (articleScrollRef.current) {
         articleScrollRef.current.scrollTop = 0;
       }
+      try {
+        const targetPath = `/blog/${selectedPost.slug}`;
+        if (typeof window !== 'undefined' && window.location.pathname !== targetPath) {
+          window.history.pushState({ postSlug: selectedPost.slug }, '', targetPath);
+        }
+      } catch (_) {}
     } else {
       updateHeadMetadata({
         title: VIEW_SEO_CONFIGS.blog.title,
         description: VIEW_SEO_CONFIGS.blog.description,
         canonicalUrl: 'https://cordeviadigital.com/blog',
       });
+      try {
+        if (typeof window !== 'undefined' && window.location.pathname.startsWith('/blog/')) {
+          window.history.pushState(null, '', '/blog');
+        }
+      } catch (_) {}
     }
   }, [selectedPost, onActivePostChange]);
 
